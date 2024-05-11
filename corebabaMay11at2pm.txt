@@ -1,0 +1,226 @@
+
+!
+! Last configuration change at 05:08:09 UTC Mon Mar 1 1993
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname COREbaba11
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no logging console
+enable secret 5 $1$Ul/6$fm3wi4LYqhHij2XyPJ9e1.
+!
+no aaa new-model
+system mtu routing 1500
+ip routing
+ip domain-name encor11.com
+ip name-server 10.11.1.10
+!
+ip dhcp excluded-address 10.11.1.1 10.11.1.100
+ip dhcp excluded-address 10.11.10.1 10.11.10.100
+ip dhcp excluded-address 10.11.50.1 10.11.50.100
+ip dhcp excluded-address 10.11.100.1 10.11.100.100
+!
+ip dhcp pool MGMTDATA
+ network 10.11.1.0 255.255.255.0
+ default-router 10.11.1.4 
+ domain-name MGMTDATA.COM
+ dns-server 10.11.1.10 
+!
+ip dhcp pool WIFIDATA
+ network 10.11.10.0 255.255.255.0
+ default-router 10.11.10.4 
+ domain-name WIFIDATA.COM
+ dns-server 10.11.1.10 
+!
+ip dhcp pool IPCCTV
+ network 10.11.50.0 255.255.255.0
+ default-router 10.11.50.4 
+ domain-name IPCCTV.COM
+ dns-server 10.11.1.10 
+!
+ip dhcp pool VOICEVLAN
+ network 10.11.100.0 255.255.255.0
+ default-router 10.11.100.4 
+ domain-name VOICEVLAN.COM
+ dns-server 10.11.1.10 
+ option 150 ip 10.11.100.8 
+!
+ip dhcp pool CAMERAsaPort6
+ host 10.11.50.6 255.255.255.0
+ client-identifier 001a.070a.27e4
+!
+ip dhcp pool CAMERAsaPort8
+ host 10.11.50.8 255.255.255.0
+ client-identifier 001a.0709.c25b
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1927906560
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1927906560
+ revocation-check none
+ rsakeypair TP-self-signed-1927906560
+!
+!
+crypto pki certificate chain TP-self-signed-1927906560
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31393237 39303635 3630301E 170D3933 30333031 30303031 
+  31365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 39323739 
+  30363536 3030819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100B635 BE57F611 BD2A525C E2BEBD49 2FB0CDA1 76CF3CCE 2AC5AEE8 FD43DCE0 
+  42E0BC19 C7B33A4D B05875C0 6CE11562 496EBA21 FFC844A8 D9C19674 7B36271D 
+  ABC5D18B 28CBA5A8 1B38F467 B9A741A4 2F46CC55 D551F4AC 0057CDDE 5AE99883 
+  2A0928E4 D82F251A DFB665BF 6A8164D7 524049D4 1B1DBE01 C705EADB 4B016D75 
+  845B0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 14F41537 FB28CBA7 44C30932 52AD2EF1 11A389F8 B8301D06 
+  03551D0E 04160414 F41537FB 28CBA744 C3093252 AD2EF111 A389F8B8 300D0609 
+  2A864886 F70D0101 05050003 81810007 BB18948E EB67441C 2F401D21 C9A54940 
+  029DFBD0 C805F5E2 D540E3BF E2090925 5156B7CF CB53251C 30C670F4 094E0D0A 
+  A20899A4 7465C631 C1FCB002 3D936447 E351753F CF223512 54F5B08E 1B7DD2F5 
+  D8E55073 013B2C6B 0D77FAA8 448C6247 5C351EF3 37E0509B 22187AA7 644F8BCA 
+  E6E28A38 BC66F7C5 BEDAB450 85AE84
+  	quit
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+track 1 interface GigabitEthernet0/1 line-protocol
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/1
+!
+interface FastEthernet0/2
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/3
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/4
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/5
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/6
+ switchport access vlan 50
+ switchport mode access
+!
+interface FastEthernet0/7
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/8
+ switchport access vlan 50
+ switchport mode access
+!
+interface FastEthernet0/9
+!
+interface FastEthernet0/10
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+!
+interface FastEthernet0/11
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+!
+interface FastEthernet0/12
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/1
+ no switchport
+ ip address 10.11.11.4 255.255.255.0
+!
+interface Vlan1
+ description MGMTDATA
+ ip address 10.11.1.4 255.255.255.0
+ standby 1 ip 10.11.1.6
+ standby 1 priority 150
+ standby 1 preempt
+ standby 1 track 1 decrement 60
+!
+interface Vlan10
+ description WIRELESS
+ ip address 10.11.10.4 255.255.255.0
+!
+interface Vlan50
+ description IPCCTV
+ ip address 10.11.50.4 255.255.255.0
+!
+interface Vlan100
+ description VOICEVLAN
+ ip address 10.11.100.4 255.255.255.0
+!
+router ospf 1
+ router-id 10.11.1.4
+ network 10.11.0.0 0.0.255.255 area 11
+!
+ip http server
+ip http secure-server
+!
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ password 7 03145A1815
+ login
+line vty 0 4
+ exec-timeout 0 0
+ password 7 08314D5D1A
+ login
+line vty 5 14
+ exec-timeout 0 0
+ password 7 08314D5D1A
+ login
+line vty 15
+ login
+!
+end

@@ -1,0 +1,183 @@
+
+!
+! Last configuration change at 01:28:34 UTC Mon Mar 1 1993
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname COREtaas11
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no logging console
+enable secret 5 $1$TKfj$9A8ZAuteaZsBWfFoTkKl61
+!
+no aaa new-model
+system mtu routing 1500
+ip routing
+no ip domain-lookup
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1927907840
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1927907840
+ revocation-check none
+ rsakeypair TP-self-signed-1927907840
+!
+!
+crypto pki certificate chain TP-self-signed-1927907840
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31393237 39303738 3430301E 170D3933 30333031 30303031 
+  31335A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 39323739 
+  30373834 3030819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100A82D DC92201A 5B9C5A45 C49F34C5 BC9B81ED 08AB9E1E AA71EAA6 F3165B7E 
+  E7983DEB E0D3C952 C2E0425A 5061E0CD 03C2B29E 340DE300 83605970 0547605D 
+  E14C03E9 E08D5DCB 53B3C9BD B63FB759 AC8E2EE5 618754D1 7A05124C 63DA71C3 
+  B0F737F2 173031C8 DECB51A8 19FBE8E0 85DC7F0C 6DF43705 C6801AA0 3EFC57B5 
+  10FD0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 145EE10D C1752AD7 8496F568 1CEB9B89 5BECB274 9F301D06 
+  03551D0E 04160414 5EE10DC1 752AD784 96F5681C EB9B895B ECB2749F 300D0609 
+  2A864886 F70D0101 05050003 81810011 CC965E17 E332ED0D 57039F00 D3D79400 
+  25003971 10626819 7CFA8BA1 2154FA07 D0B44F19 9FE58DFE F8717174 DA7E73DF 
+  5C1EDCA0 A75FE27B E4D376BF DED4790A 734CA000 703808B2 4C41ADA0 1507C24B 
+  9DC74ABB F39CF1B6 03A10AF1 254CEB3B FF156E5D D56592B9 4947FCDD B3707080 
+  26719D09 2E5E89D0 21C1FCC4 89C970
+  	quit
+!
+!
+!
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+spanning-tree uplinkfast
+spanning-tree backbonefast
+spanning-tree vlan 1-100 priority 24576
+!
+vlan internal allocation policy ascending
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/1
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ spanning-tree portfast
+!
+interface FastEthernet0/7
+ spanning-tree portfast
+!
+interface FastEthernet0/8
+ spanning-tree portfast
+!
+interface FastEthernet0/9
+!
+interface FastEthernet0/10
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+!
+interface FastEthernet0/11
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+!
+interface FastEthernet0/12
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/1
+ no switchport
+ ip address 201.0.0.11 255.255.255.0
+!
+interface Vlan1
+ description MGMTDATA
+ ip address 10.11.1.2 255.255.255.0
+ standby 1 ip 10.11.1.6
+ standby 1 preempt
+!
+interface Vlan10
+ description WIRELESS
+ ip address 10.11.10.2 255.255.255.0
+!
+interface Vlan50
+ description IPCCTV
+ ip address 10.11.50.2 255.255.255.0
+!
+interface Vlan100
+ description VOICEVLAN
+ ip address 10.11.100.2 255.255.255.0
+!
+router ospf 1
+ router-id 10.11.1.2
+ network 10.11.0.0 0.0.255.255 area 11
+!
+ip http server
+ip http secure-server
+!
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ password 7 15020A1F17
+ login
+line vty 0 4
+ exec-timeout 0 0
+ password 7 0014121517
+ login
+line vty 5 14
+ exec-timeout 0 0
+ password 7 0014121517
+ login
+line vty 15
+ login
+!
+end

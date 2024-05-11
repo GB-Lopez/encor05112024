@@ -1,0 +1,181 @@
+@encoreadditionalcommands:
+
+task1: trunk fa0/10-12:
+CoreTaas/Baba:
+config t
+interface range fa0/10-12
+switchport trunk encap dot1q
+switchport mode trunk
+
+task2: configure etherhcannel1/lab2 on fa0/10-12
+	using LACP: link aggregration control protocol
+conf t 
+interface range fa0/10-12
+shut
+channel-group 1 mode active
+channel-protocol lacp
+no shut
+do sh etherchannel summ
+do sh int po1 | in BW
+int Port-channel1
+switchport trunk encap dot1q
+switchport mode trunk
+
+task3: hosta standby routing protocol
+@CoreTaas
+conf t 
+int vlan 1
+standby 1 ip 10.11.1.6
+standby 1 preempt
+standby 1 priority 100
+@CoreBaba/Primary
+conf t 
+track 1 int gi 0/1 line-protocol
+int vlan 1
+standby 1 ip 10.11.1.6
+standby 1 preempt 
+standby 1 priority 150
+standby 1 track 1 decrement 60
+
+task4: CoreTaas create a routed port to DITO:
+@coretaas:
+conf t 
+int gi0/1
+no switchport
+!makes this a routed port, not part of any vlan
+ip add 201.0.0.11 255.255.255.0
+no shut
+ping 200.0.0.1
+
+@task5:vlan trunking protocol/ VTP config for coreSW:
+!coreTAAS/coreBABA:
+conf t 
+vtp domain ccnp
+vtp password encor
+vtp mode server
+exit
+sh vtp status
+
+@task6: basic EDGEconfig:
+ping 10.11.11.4
+ping 200.0.0.11
+ping 200.0.0.22
+
+@task7: Multiarea OSPF config:
+@edge, @coreTass, @coreBABA @cucm
+@coreTAAS:
+conf t
+ip routing
+router ospf 1
+router-id 10.11.1.2
+network 10.11.0.0 0.0.255.255 area 11
+exit
+@coreBABA
+conf t
+ip routing
+router ospf 1
+router-id 10.11.1.4
+network 10.11.0.0 0.0.255.255 area 11
+@CUCM:
+conf t
+ip routing
+router ospf 1
+router-id 10.11.100.8
+network 10.11.11.0 0.0.255.255.area 11
+exit
+@Edge:
+conf t 
+router ospf 1
+router-id 11.0.0.1
+network 200.0.0.0 0.0.0.255 area 0
+network 10.11.11.0 0.0.0.255 area 11.
+network 11.0.0.1 0.0.0.0 area 0
+
+@task8: Get the mac of fa0/6 and fa0/8:
+sh mac address-table
+50    001a.0709.c25b    DYNAMIC     Fa0/8
+50    001a.070a.27e4    DYNAMIC     Fa0/6
+@possible encor LAB: MAc address reservation:
+@coreBABA:
+conf t 
+ip dhcp pool CAMERAsaPort6
+ host 10.11.50.6 255.255.255.0
+ client-identifier 001a.070a.27e4
+ip dhcp pool CAMERAsaPort8
+ host 10.11.50.8 255.255.255.0
+ client-identifier 001a.0709.c25b
+exit
+sh ip dhcp binding
+
+@task9: Cisco and DNS integration.
+cmd
+powershell
+Add-windowsFeature -name dns -includeManagementTools
+ncpa.cpl
+
+#have Cisco and DNS talk each other:
+CoreBABA:
+conf t 
+ip domain-lookup
+ip domain-name encor11.com
+ip name-server 10.11.1.10
+end
+
+@task10: confuring Cisco wireless controllers.
+Recover-Config*****
+
+Encor Learn how to config a WirelessController
+ping 10.11.10.11
+
+@task11: Cisco Storage and backup services:
+Intergrate Cisco and FTP services:
+cmd
+powrshell
+install-WindowsFeature -name Web-ftp-server -includeAllSubFeature -includeManagementTools
+install-WindowsFeature -name Web-server -includeAllSubFeature -includeManagementTools
+
+@task12: Cisco as file storage
+
+@task13:
+Taas
+conf t 
+spanning-tree mode pvst
+spanning-tree vlan 1-100 root primary
+sh spanning-tree vlan 1
+Baba
+conf t
+spanning-tree mode pvst
+spanning-tree vlan 1-100 root secondary
+
+@task14: spanning-tree protocol enhancement
+CoreTaas
+conf t 
+spanning-tree mode rapid-pvst 
+spanning-tree backbonefast
+spanning-tree portfast bpduguard default
+int range fa0/1-8
+spanning-tree portfast
+CoreBABA
+conf t 
+spanning-tree mode rapid-pvst 
+spanning-tree uplinkfast
+spanning-tree portfast bpduguard default
+int range fa0/1-8
+spanning-tree portfast
+
+@TASK15: How to master all the 14 LABS in Encor
+root
+C1sc0123
+rm -r /etc/udev/rules/70-persistent-net.rules 
+Y
+reboot
+
+
+
+
+
+
+
+
+
+

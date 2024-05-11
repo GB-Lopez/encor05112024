@@ -1,0 +1,172 @@
+
+!
+! Last configuration change at 05:07:33 UTC Sat May 11 2024
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+!
+hostname EDGE11
+!
+boot-start-marker
+boot system flash:/isr4300-universalk9.16.09.06.SPA.bin
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+enable secret 5 $1$IZ1A$mlN2PxvEJynfmI4KO/ZPl.
+!
+no aaa new-model
+!
+no ip domain lookup
+!
+!
+!
+no login on-success log
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+multilink bundle-name authenticated
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3554684029
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3554684029
+ revocation-check none
+ rsakeypair TP-self-signed-3554684029
+!
+!
+crypto pki certificate chain TP-self-signed-3554684029
+!
+license udi pid ISR4321/K9 sn FDO21450AN3
+license boot level securityk9
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description VIRTUALIP
+ ip address 11.0.0.1 255.255.255.255
+!
+interface Tunnel1
+ description vpn-GRE-TUNNEL TO r1
+ ip address 172.31.32.2 255.255.255.0
+ tunnel source 200.0.0.32
+ tunnel destination 200.0.0.31
+!
+interface GigabitEthernet0/0/0
+ description INSIDE
+ ip address 10.11.11.1 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0/0/1
+ description OUTSIDE
+ ip address 200.0.0.11 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ shutdown
+ negotiation auto
+!
+!
+router eigrp 100
+ network 172.31.0.0
+ network 200.0.0.0
+!
+router ospf 1
+ router-id 11.0.0.1
+ network 10.11.11.0 0.0.0.255 area 11
+ network 11.0.0.1 0.0.0.0 area 0
+ network 200.0.0.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+ip route 0.0.0.0 0.0.0.0 200.0.0.1
+!
+!
+ip access-list extended 102
+ permit gre host 200.0.0.32 host 200.0.0.31
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ password 7 095C4F1A0A
+ login
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 0
+ password 7 03145A1815
+ login
+line vty 5 14
+ exec-timeout 0 0
+ password 7 03145A1815
+ login
+!
+!
+!
+!
+!
+!
+end
